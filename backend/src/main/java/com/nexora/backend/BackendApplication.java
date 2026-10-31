@@ -1,13 +1,1 @@
-package com.nexora.backend;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class BackendApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
-	}
-
-}
+package com.nexora.backend; import org.flywaydb.core.Flyway; import org.springframework.boot.SpringApplication; import org.springframework.boot.autoconfigure.SpringBootApplication; import java.io.InputStream; import java.util.Properties; @SpringBootApplication public class BackendApplication { public static void main(String[] args) throws Exception { Properties props = new Properties(); try (InputStream in = BackendApplication.class.getClassLoader() .getResourceAsStream("application.properties")) { props.load(in); } Flyway flyway = Flyway.configure() .dataSource( props.getProperty("spring.datasource.url"), props.getProperty("spring.datasource.username"), props.getProperty("spring.datasource.password") ) .locations("classpath:db/migration") .load(); flyway.migrate(); SpringApplication.run(BackendApplication.class, args); } }
